@@ -32,5 +32,13 @@ def login():
         session['user_id'] = u.id
         # 设置 cookie 有效期为 永久
         session.permanent = True
-        data = {'message':'successful'}
+        data = {'message': 'successful'}
         return response(data, status=status.HTTP_200_OK)
+
+
+@main.route('register', methods=['POST'])
+def register():
+    form = request.form
+    u = User.register(form)
+    data = {'message': 'successful'}
+    return response(data=data, status=status.HTTP_201_CREATED)
