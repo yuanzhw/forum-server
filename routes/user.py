@@ -4,6 +4,7 @@ from flask import (
     url_for,
     Blueprint,
     session,
+    abort,
 )
 from models.user import User
 from utils import response
@@ -42,3 +43,13 @@ def register():
     u = User.register(form)
     data = {'message': 'successful'}
     return response(data=data, status=status.HTTP_201_CREATED)
+
+
+@main.route('/user/<int:id>')
+def user_detail(id):
+    u: User = User.one(id=id)
+    if u is None:
+        abort(404)
+    else:
+        data = u.get_detail()
+        return response(data=data, status=status.HTTP_200_OK)

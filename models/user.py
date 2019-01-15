@@ -56,3 +56,6 @@ class User(SQLMixin, db.Model):
             return user
         else:
             return None
+
+    def get_detail(self):
+        return dict(username=self.username)
