@@ -8,6 +8,7 @@ from flask import (
 )
 from models.user import User
 from utils import response
+from routes.helper import login_required
 import status
 
 main = Blueprint('user', __name__)
@@ -46,6 +47,7 @@ def register():
 
 
 @main.route('/user/<int:id>')
+@login_required
 def user_detail(id):
     u: User = User.one(id=id)
     if u is None:
