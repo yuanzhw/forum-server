@@ -2,10 +2,11 @@ import functools
 import uuid
 from functools import wraps
 
-from flask import session, request, abort, redirect, url_for
+from flask import session, request, abort, Blueprint, redirect, url_for
 
 from models.user import User
-from utils import log
+from utils import log, response
+import status
 import redis
 
 csrf_tokens = redis.StrictRedis()
@@ -23,7 +24,10 @@ def login_required(route_function):
         u = current_user()
         if u is None:
             log('游客用户')
-            return redirect(url_for('index.index'))
+            data = dict(
+                message='login required'
+            )
+            return response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         else:
             log('登录用户', route_function)
             return route_function()
@@ -45,10 +49,10 @@ def current_user():
 def csrf_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        token = request.args['token']
+        token = request.args.get('token')
 
         u = current_user()
-        if csrf_tokens.exists(token) and csrf_tokens.get(token) == u.id:
+        if token is not None and csrf_tokens.exists(token) and int(csrf_tokens.get(token).decode()) == u.id:
             csrf_tokens.delete(token)
             return f(*args, **kwargs)
         else:
@@ -62,3 +66,15 @@ def new_csrf_token():
     token = str(uuid.uuid4())
     csrf_tokens.set(token, u.id)
     return token
+
+
+main = Blueprint('helper', __name__)
+
+
+@main.route('/csrf')
+def csrf_new():
+    token = new_csrf_token()
+    data = dict(
+        token=token
+    )
+    return response(data=data, status=status.HTTP_200_OK)
