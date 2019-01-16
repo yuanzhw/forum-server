@@ -1,5 +1,7 @@
 from flask import Flask
 from routes.user import main as user_routes
+from routes.topic import main as topic_routes
+from routes.helper import main as helper_routes
 from models.base_model import db
 import secret
 
@@ -30,7 +32,9 @@ def register_routes(app):
     # 注册蓝图
     # 有一个 url_prefix 可以用来给蓝图中的每个路由加一个前缀
 
-    app.register_blueprint(user_routes, url_prefix='/api')
+    app.register_blueprint(user_routes, url_prefix='/api/user')
+    app.register_blueprint(topic_routes, url_prefix='/api/topic')
+    app.register_blueprint(helper_routes,url_prefix='/api')
 
 
 if __name__ == '__main__':
