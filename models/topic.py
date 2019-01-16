@@ -1,12 +1,13 @@
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, UnicodeText, Unicode
 
 from models.base_model import SQLMixin, db
 from sqlalchemy.orm import relationship
 
 
 class Topic(SQLMixin, db.Model):
-    title = Column(String(50), nullable=False)
-    content = Column(String(5000), nullable=False)
+    title = Column(Unicode(50), nullable=False)
+    content = Column(UnicodeText(5000), nullable=False)
+    views = Column(Integer,nullable=False, default=0)
     user_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     reply = relationship('Reply')
 
