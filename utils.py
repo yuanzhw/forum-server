@@ -14,5 +14,7 @@ def log(*args, **kwargs):
 
 
 def response(data, status=None, header=None):
+    if header is None:
+        header = {'Content-type': 'application/json'}
     data = json.dumps(data)
     return data, status, header
