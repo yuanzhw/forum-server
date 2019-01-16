@@ -2,7 +2,7 @@ from sqlalchemy import Column, String
 
 from models.base_model import SQLMixin, db
 from sqlalchemy.orm import relationship
-from models.topic import Topic
+from models.topic import Topic, Reply
 
 
 class User(SQLMixin, db.Model):
@@ -14,6 +14,7 @@ class User(SQLMixin, db.Model):
     username = Column(String(50), nullable=False)
     password = Column(String(256), nullable=False)
     topics = relationship('Topic')
+    reply = relationship('Reply')
 
     @classmethod
     def salted_password(cls, password, salt='$!@><?>HUI&DWQa`'):
