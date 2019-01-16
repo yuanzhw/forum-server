@@ -2,7 +2,6 @@ from sqlalchemy import Column, String
 
 from models.base_model import SQLMixin, db
 from sqlalchemy.orm import relationship
-from models.topic import Topic, Reply
 
 
 class User(SQLMixin, db.Model):
