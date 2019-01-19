@@ -3,11 +3,13 @@ from routes.user import main as user_routes
 from routes.topic import main as topic_routes
 from routes.helper import main as helper_routes
 from models.base_model import db
+from flask_cors import CORS
 import secret
 
 
 def configured_app():
     flask_app = Flask(__name__)
+    CORS(flask_app,supports_credentials=True)
     flask_app.config['TEMPLATES_AUTO_RELOAD'] = True
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     flask_app.jinja_env.auto_reload = True
@@ -34,7 +36,7 @@ def register_routes(app):
 
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(topic_routes, url_prefix='/api/topic')
-    app.register_blueprint(helper_routes,url_prefix='/api')
+    app.register_blueprint(helper_routes, url_prefix='/api')
 
 
 if __name__ == '__main__':
