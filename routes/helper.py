@@ -2,7 +2,7 @@ import functools
 import uuid
 from functools import wraps
 
-from flask import session, request, abort, Blueprint, redirect, url_for
+from flask import session, request, abort, Blueprint, Response, redirect, url_for
 
 from models.user import User
 from utils import log, response
@@ -19,7 +19,7 @@ def login_required(route_function):
     """
 
     @functools.wraps(route_function)
-    def f():
+    def f(*args, **kwargs):
         log('login_required')
         u = current_user()
         if u is None:
@@ -30,7 +30,7 @@ def login_required(route_function):
             return response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         else:
             log('登录用户', route_function)
-            return route_function()
+            return route_function(*args, **kwargs)
 
     return f
 
@@ -54,7 +54,9 @@ def csrf_required(f):
         u = current_user()
         if token is not None and csrf_tokens.exists(token) and int(csrf_tokens.get(token).decode()) == u.id:
             csrf_tokens.delete(token)
-            return f(*args, **kwargs)
+            res: Response = f(*args, **kwargs)
+            res.set_cookie('csrf_token', new_csrf_token())
+            return res
         else:
             abort(401)
 
