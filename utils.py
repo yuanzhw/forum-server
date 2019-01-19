@@ -1,7 +1,7 @@
 import os.path
 import time
 import json
-
+from flask import make_response
 
 def log(*args, **kwargs):
     # time.time() 返回 unix time
@@ -17,4 +17,5 @@ def response(data, status=None, header=None):
     if header is None:
         header = {'Content-type': 'application/json'}
     data = json.dumps(data)
-    return data, status, header
+    res = make_response(data, status, header)
+    return res
