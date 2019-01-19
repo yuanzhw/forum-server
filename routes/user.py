@@ -8,7 +8,7 @@ from flask import (
 )
 from models.user import User
 from utils import response
-from routes.helper import login_required
+from routes.helper import login_required, new_csrf_token
 import status
 
 main = Blueprint('user', __name__)
@@ -23,7 +23,7 @@ def hello_world():
 
 @main.route('/login', methods=['POST'])
 def login():
-    form = request.form
+    form = request.get_json()
     u = User.validate_login(form)
     if u is None:
         # 转到 topic.index 页面
@@ -35,7 +35,10 @@ def login():
         # 设置 cookie 有效期为 永久
         session.permanent = True
         data = {'message': 'successful'}
-        return response(data, status=status.HTTP_200_OK)
+        res = response(data, status=status.HTTP_200_OK)
+        csrf_token = new_csrf_token()
+        res.set_cookie("csrf_token", csrf_token)
+        return res
 
 
 @main.route('register', methods=['POST'])
