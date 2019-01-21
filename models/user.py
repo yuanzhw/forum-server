@@ -12,6 +12,8 @@ class User(SQLMixin, db.Model):
 
     username = Column(String(50), nullable=False)
     password = Column(String(256), nullable=False)
+    email = Column(String(256), nullable=True)
+    signature = Column(String(256), nullable=True, default='这家伙很懒，什么都没有留下')
     topics = relationship('Topic')
     reply = relationship('Reply')
 
@@ -58,4 +60,4 @@ class User(SQLMixin, db.Model):
             return None
 
     def get_detail(self):
-        return dict(username=self.username)
+        return dict(username=self.username, signature=self.signature, email=self.email)
