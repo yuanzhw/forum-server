@@ -8,7 +8,7 @@ from flask import (
 )
 from models.user import User
 from utils import response
-from routes.helper import login_required, new_csrf_token
+from routes.helper import login_required, new_csrf_token, current_user
 import status
 
 main = Blueprint('user', __name__)
@@ -27,7 +27,7 @@ def login():
     u = User.validate_login(form)
     if u is None:
         # 转到 topic.index 页面
-        data = {}
+        data = 'invalid username or password'
         return response(data, status=status.HTTP_401_UNAUTHORIZED)
     else:
         # session 中写入 user_id
@@ -43,18 +43,32 @@ def login():
 
 @main.route('register', methods=['POST'])
 def register():
-    form = request.form
+    form = request.get_json()
     u = User.register(form)
-    data = {'message': 'successful'}
-    return response(data=data, status=status.HTTP_201_CREATED)
+    if u is not None:
+        data = {'message': 'successful'}
+        return response(data=data, status=status.HTTP_201_CREATED)
+    else:
+        data = 'register failed'
+        return response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@main.route('/user/<int:id>')
+@main.route('/detail')
 @login_required
-def user_detail(id):
-    u: User = User.one(id=id)
+def user_detail():
+    u: User = current_user()
     if u is None:
         abort(404)
     else:
         data = u.get_detail()
         return response(data=data, status=status.HTTP_200_OK)
+
+
+@main.route('/update', methods=['POST'])
+@login_required
+def update():
+    form = request.get_json()
+    u: User = current_user()
+    User.update(u.id, **form)
+    data = 'update success'
+    return response(data=data, status=status.HTTP_202_ACCEPTED)

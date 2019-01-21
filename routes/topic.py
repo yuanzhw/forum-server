@@ -19,7 +19,7 @@ main = Blueprint('topic', __name__)
 @login_required
 @csrf_required
 def new():
-    form = request.form.to_dict()
+    form = request.get_json()
     u = current_user()
     Topic.new(form, user_id=u.id)
     data = {'message': 'successful'}
