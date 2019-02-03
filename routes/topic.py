@@ -58,7 +58,11 @@ def topic_list():
     data = list()
     for m in ms:
         m: Topic
-        data.append(dict(content=m.content, title=m.title, id=m.id, user_id=m.user_id))
+        data.append(dict(content=m.content,
+                         title=m.title,
+                         id=m.id,
+                         user_id=m.user_id,
+                         create_time=m.created_time, ))
     return response(data=data, status=status.HTTP_200_OK)
 
 

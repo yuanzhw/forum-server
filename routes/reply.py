@@ -30,5 +30,9 @@ def reply_list(topic_id):
     data = list()
     for m in ms:
         m: Reply
-        data.append(dict(content=m.content, user_id=m.user_id, topic_id=m.topic_id, username=m.user().username))
+        data.append(dict(content=m.content,
+                         user_id=m.user_id,
+                         topic_id=m.topic_id,
+                         username=m.user().username,
+                         create_time=m.created_time, ))
     return response(data=data, status=status.HTTP_200_OK)
