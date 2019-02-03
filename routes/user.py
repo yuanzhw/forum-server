@@ -47,7 +47,12 @@ def register():
     u = User.register(form)
     if u is not None:
         data = {'message': 'successful'}
-        return response(data=data, status=status.HTTP_201_CREATED)
+        session['user_id'] = u.id
+        session.permanent = True
+        res = response(data=data, status=status.HTTP_201_CREATED)
+        csrf_token = new_csrf_token()
+        res.set_cookie("csrf_token", csrf_token)
+        return res
     else:
         data = 'register failed'
         return response(data=data, status=status.HTTP_400_BAD_REQUEST)
@@ -55,7 +60,7 @@ def register():
 
 @main.route('/detail')
 @login_required
-def user_detail():
+def current_user_detail():
     u: User = current_user()
     if u is None:
         abort(404)
@@ -72,3 +77,14 @@ def update():
     User.update(u.id, **form)
     data = 'update success'
     return response(data=data, status=status.HTTP_202_ACCEPTED)
+
+
+@main.route('/<int:id>')
+@login_required
+def user_detail(id):
+    u: User = User.one(id=id)
+    if u is None:
+        abort(404)
+    else:
+        data = u.get_detail()
+        return response(data=data, status=status.HTTP_200_OK)
