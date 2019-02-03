@@ -36,9 +36,3 @@ class Topic(SQLMixin, db.Model):
     def reply_count(self):
         count = len(self.replies())
         return count
-
-
-class Reply(SQLMixin, db.Model):
-    content = Column(String(500), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    topic_id = Column(Integer, ForeignKey('topic.id', ondelete='CASCADE'), nullable=False)

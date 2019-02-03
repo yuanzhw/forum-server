@@ -2,6 +2,7 @@ from flask import Flask
 from routes.user import main as user_routes
 from routes.topic import main as topic_routes
 from routes.helper import main as helper_routes
+from routes.reply import main as reply_routes
 from models.base_model import db
 from flask_cors import CORS
 import secret
@@ -36,6 +37,7 @@ def register_routes(app):
 
     app.register_blueprint(user_routes, url_prefix='/api/user')
     app.register_blueprint(topic_routes, url_prefix='/api/topic')
+    app.register_blueprint(reply_routes, url_prefix='/api/reply')
     app.register_blueprint(helper_routes, url_prefix='/api')
 
 
