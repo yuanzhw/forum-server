@@ -29,8 +29,10 @@ def new():
 @main.route('/<int:id>')
 @login_required
 def detail(id):
-    m = Topic.get(id)
+    m: Topic = Topic.get(id)
     data = dict(
+        id=m.id,
+        user_id=m.user_id,
         title=m.title,
         content=m.content,
         views=m.views,
@@ -48,6 +50,16 @@ def delete():
         message='success'
     )
     return response(data=data, status=status.HTTP_202_ACCEPTED)
+
+
+@main.route('/list')
+def topic_list():
+    ms = Topic.all()
+    data = list()
+    for m in ms:
+        m: Topic
+        data.append(dict(content=m.content, title=m.title, id=m.id, user_id=m.user_id))
+    return response(data=data, status=status.HTTP_200_OK)
 
 
 @main.route('/csrf')
