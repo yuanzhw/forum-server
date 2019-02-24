@@ -9,16 +9,27 @@ from flask_cors import CORS
 import secret
 
 
+def configured_database(database_username, database_password, host, database_name, database_charset='utf8mb4'):
+    return 'mysql+pymysql://{}:{}@{}/{}?charset={}'.format(database_username,
+                                                           database_password,
+                                                           host,
+                                                           database_name,
+                                                           database_charset)
+
+
 def configured_app():
     flask_app = Flask(__name__)
-    CORS(flask_app,supports_credentials=True)
+    CORS(flask_app, supports_credentials=True)
     flask_app.config['TEMPLATES_AUTO_RELOAD'] = True
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     flask_app.jinja_env.auto_reload = True
     flask_app.secret_key = secret.secret_key
 
-    flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:{}@localhost/forum?charset=utf8mb4'.format(
-        secret.database_password
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = configured_database(
+        secret.database_name,
+        secret.database_password,
+        secret.database_host,
+        secret.database_name,
     )
 
     db.init_app(flask_app)
