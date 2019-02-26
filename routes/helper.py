@@ -8,8 +8,9 @@ from models.user import User
 from utils import log, response
 import status
 import redis
+from secret import redis_host
 
-csrf_tokens = redis.StrictRedis()
+csrf_tokens = redis.StrictRedis(host=redis_host)
 
 
 def login_required(route_function):
