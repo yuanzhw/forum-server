@@ -4,6 +4,8 @@ import secret
 from app import configured_app, configured_database
 from models.base_model import db
 from models.user import User
+from models.topic import Topic
+from models.message import Message
 
 
 def reset_database(database_name=secret.database_name):
@@ -31,6 +33,24 @@ def generate_fake_date():
     )
     u = User.register(form)
     print(u)
+    form = dict(
+        title='title',
+        content='content',
+        user_id=1,
+    )
+    Topic.new(form, user_id=1)
+    form = dict(
+        title='title for test',
+        content='content for test',
+        user_id=1,
+    )
+    Topic.new(form, user_id=1)
+    for i in range(10):
+        form = dict(
+            content='test for message' + str(i),
+            user_id=1,
+        )
+        Message.new(form)
 
 
 if __name__ == '__main__':
