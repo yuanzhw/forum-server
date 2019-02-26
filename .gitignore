@@ -5,3 +5,5 @@ log.txt
 secret.py
 database_secret.conf
 venv
+/forum.egg-info/
+.pytest_cache/
