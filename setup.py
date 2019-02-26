@@ -21,6 +21,10 @@ setup(
         'flask',
         'sqlalchemy',
         'redis',
+        'gunicorn',
+        'pymysql',
+        'flask_sqlalchemy',
+        'flask_cors',
     ],
     extras_require={
         'test': [
