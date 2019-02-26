@@ -26,7 +26,7 @@ def configured_app():
     flask_app.secret_key = secret.secret_key
 
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = configured_database(
-        secret.database_name,
+        secret.database_username,
         secret.database_password,
         secret.database_host,
         secret.database_name,
