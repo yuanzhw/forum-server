@@ -2,7 +2,7 @@ FROM python:3.7
 
 WORKDIR /app
 
-COPY . .
+RUN git clone https://github.com/yuanzhw/forum-server.git
 
 RUN pip3 install -e .
 

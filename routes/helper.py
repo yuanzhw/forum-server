@@ -9,8 +9,9 @@ from utils import log, response
 import status
 import redis
 from secret import redis_host
+import os
 
-csrf_tokens = redis.StrictRedis(host=redis_host)
+csrf_tokens = redis.StrictRedis(host=os.getenv('REDIS_HOST', redis_host))
 
 
 def login_required(route_function):

@@ -7,6 +7,7 @@ from routes.message import main as message_routes
 from models.base_model import db
 from flask_cors import CORS
 import secret
+import os
 
 
 def configured_database(database_username, database_password, host, database_name, database_charset='utf8mb4'):
@@ -23,13 +24,13 @@ def configured_app():
     flask_app.config['TEMPLATES_AUTO_RELOAD'] = True
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     flask_app.jinja_env.auto_reload = True
-    flask_app.secret_key = secret.secret_key
+    flask_app.secret_key = os.getenv('SECRET_KEY', secret.secret_key)
 
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = configured_database(
-        secret.database_username,
-        secret.database_password,
-        secret.database_host,
-        secret.database_name,
+        os.getenv('DATABASE_USERNAME', secret.database_username),
+        os.getenv('DATABASE_PASSWORD', secret.database_password),
+        os.getenv('DATABASE_HOST)', secret.database_host),
+        os.getenv('DATABASE_NAME', secret.database_name),
     )
 
     db.init_app(flask_app)
