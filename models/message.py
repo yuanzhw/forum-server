@@ -26,3 +26,11 @@ class Message(SQLMixin, db.Model):
     def get_unread_num(cls, user_id):
         ms = cls.all(user_id=user_id, read=False)
         return len(ms)
+
+    @classmethod
+    def read_all(cls, user_id):
+        ms = Message.all(user_id=user_id)
+        for m in ms:
+            m: Message
+            m.read = True
+            m.save()

@@ -47,3 +47,14 @@ def read(id):
                 read=m.read,
                 create_time=m.created_time, )
     return response(data=data, status=status.HTTP_200_OK)
+
+
+@main.route('/read_all')
+@login_required
+def read_all():
+    u = current_user()
+    Message.read_all(u.id)
+    data = dict(
+        message='all message has been read'
+    )
+    return response(data=data, status=status.HTTP_200_OK)
